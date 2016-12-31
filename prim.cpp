@@ -18,7 +18,7 @@ struct Edge {
 int row, col;
 int egc, head[MAXN*MAXN];
 bool used[MAXN*MAXN];
-bool haswall[MAXN][MAXN][4];
+bool M[MAXN][MAXN][4];
 
 // add a edge <u, v> with weight w
 void add(int u, int v, int d, int w)
@@ -39,7 +39,6 @@ void generate()
     int r, c, nr, nc;
     priority_queue<P> que;
     memset(head, -1, sizeof(head));
-    memset(haswall, 1, sizeof(haswall));
 
     // initialize all the edges
     for(int i = 0; i < row; ++i) {
@@ -58,8 +57,8 @@ void generate()
         if(p.u != p.v) {
             u2p(p.u, r, c);
             u2p(p.v, nr, nc);
-            haswall[r][c][p.d] = 0;
-            haswall[nr][nc][reverse_dir[p.d]] = 0;
+            M[r][c][p.d] = 1;
+            M[nr][nc][reverse_dir[p.d]] = 1;
         }
         for(int pe = head[p.v]; pe != -1; pe = eg[pe].next)
             que.push(P(p.v, eg[pe].v, eg[pe].d, eg[pe].w));
@@ -79,13 +78,9 @@ int main(int argc, char *argv[])
 
     generate();
 
-    for(int i = 0; i < row; ++i) {
-        for(int j = 0; j < col; ++j) {
-            printf("%d %d", i, j);
+    for(int i = 0; i < row; ++i)
+        for(int j = 0; j < col; ++j)
             for(int k = 0; k < 4; ++k)
-                printf(" %d", haswall[i][j][k]);
-            putchar(10);
-        }
-    }
+                printf("%d\n", M[i][j][k]);
     return 0;
 }

@@ -13,7 +13,7 @@ struct Edge {
 int row, col;
 Edge edges[MAXN*MAXN*2];
 int par[MAXN*MAXN];
-bool haswall[MAXN][MAXN][4];
+bool M[MAXN][MAXN][4];
 
 int getpar(int x)
 {
@@ -33,7 +33,7 @@ void generate()
 {
     int edge_cnt = 0;
 
-    // initialize all the edges, the disjoint-set and haswall[]
+    // initialize all the edges, the disjoint-set and M[]
     for(int i = 0; i < row; ++i) {
         for(int j = 0; j < col; ++j) {
             if(j < col-1)
@@ -45,7 +45,6 @@ void generate()
     sort(edges, edges+edge_cnt);  // shuffle
     for(int i = 0; i < row*col; ++i)
         par[i] = i;
-    memset(haswall, 1, sizeof(haswall));
 
     // generation
     for(int i = 0; i < edge_cnt; ++i) {
@@ -55,8 +54,8 @@ void generate()
             int r, c, nr, nc;
             u2p(e.u, r, c);
             u2p(e.v, nr, nc);
-            haswall[r][c][e.d] = 0;
-            haswall[nr][nc][reverse_dir[e.d]] = 0;
+            M[r][c][e.d] = 1;
+            M[nr][nc][reverse_dir[e.d]] = 1;
         }
     }
 }
@@ -74,13 +73,9 @@ int main(int argc, char *argv[])
 
     generate();
 
-    for(int i = 0; i < row; ++i) {
-        for(int j = 0; j < col; ++j) {
-            printf("%d %d", i, j);
+    for(int i = 0; i < row; ++i)
+        for(int j = 0; j < col; ++j)
             for(int k = 0; k < 4; ++k)
-                printf(" %d", haswall[i][j][k]);
-            putchar(10);
-        }
-    }
+                printf("%d\n", M[i][j][k]);
     return 0;
 }

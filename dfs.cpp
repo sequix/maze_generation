@@ -12,7 +12,7 @@ struct P {
 stack<P> stk;
 int row, col;
 bool vis[MAXN][MAXN];
-bool haswall[MAXN][MAXN][4];
+bool M[MAXN][MAXN][4];
 
 // return a random positive integer ranged in [left, right]
 int random(int left, int right)
@@ -34,9 +34,7 @@ void move(int r, int c, int &nr, int &nc, int d)
 // generation of the maze
 void generate()
 {
-    memset(haswall, 1, sizeof(haswall));
     P src(random(0, row-1), random(0, col-1));
-    printf("%d %d\n", src);
 
     stk.push(src);
     while(!stk.empty()) {
@@ -63,8 +61,8 @@ void generate()
             move(r, c, nr, nc, d);
             if(0<=nr&&nr<row && 0<=nc&&nc<col && !vis[nr][nc]) break;
         }
-        haswall[r][c][d] = 0;
-        haswall[nr][nc][reverse_dir[d]] = 0;
+        M[r][c][d] = 1;
+        M[nr][nc][reverse_dir[d]] = 1;
         stk.push(P(nr, nc));
     }
 }
@@ -82,13 +80,9 @@ int main(int argc, char *argv[])
 
     generate();
 
-    for(int i = 0; i < row; ++i) {
-        for(int j = 0; j < col; ++j) {
-            printf("%d %d", i, j);
+    for(int i = 0; i < row; ++i)
+        for(int j = 0; j < col; ++j)
             for(int k = 0; k < 4; ++k)
-                printf(" %d", haswall[i][j][k]);
-            putchar(10);
-        }
-    }
+                printf("%d\n", M[i][j][k]);
     return 0;
 }
